@@ -24,7 +24,7 @@ const Todo = () => {
             content: "test3",
             createdAt: "",
             updatedAt: "2022/11/21",
-            isFinished: false,
+            isFinished: true,
             isDeleted: false,
         },
     ]);
@@ -52,6 +52,11 @@ const Todo = () => {
             setTodoList([...todoList, todoDict]);
         }
     }
+    const finishTodo = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+        setTodoList(
+            todoList.map((todo, index) => (todo.id === id ? { ...todo, isFinished: !todo.isFinished } : todo))
+        );
+    };
     return (
         <>
             <div className="selectFilter">
@@ -70,7 +75,7 @@ const Todo = () => {
             {todoList.map((item) => {
                 return (
                     <li key={item.id}>
-                        <input type="checkbox" />
+                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished}/>
                         <input type="text" value={item.content} />
                         <span>{item.createdAt}</span>
                         <span>{item.updatedAt}</span>
