@@ -57,6 +57,12 @@ const Todo = () => {
             todoList.map((todo, index) => (todo.id === id ? { ...todo, isFinished: !todo.isFinished } : todo))
         );
     };
+
+    const deleteTodo = (id:number) => {
+        setTodoList(
+            todoList.map((todo, index) => (todo.id === id ? { ...todo, isDeleted: !todo.isDeleted } : todo))
+        );
+    }
     return (
         <>
             <div className="selectFilter">
@@ -79,7 +85,7 @@ const Todo = () => {
                         <input type="text" value={item.content} />
                         <span>{item.createdAt}</span>
                         <span>{item.updatedAt}</span>
-                        <button>削除</button>
+                        <button onClick={() => deleteTodo(item.id)}>削除</button>
                     </li>
                 );
             })}
