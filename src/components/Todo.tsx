@@ -39,7 +39,7 @@ const Todo = () => {
         const D = date.getDate();
         const h = date.getHours();
         const m = date.getMinutes();
-        const total = `${Y}/${M}/${D} ${h}:${m}`
+        const total = `${Y}/${M}/${D} ${h}:${m}`;
         if (todoContent) {
             const todoDict = {
                 id: todoList.length,
@@ -67,6 +67,20 @@ const Todo = () => {
     const changeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setFilter(e.target.value);
     };
+
+
+    const updateTodo = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+        const date = new Date();
+        const Y = date.getFullYear();
+        const M = date.getMonth() + 1;
+        const D = date.getDate();
+        const h = date.getHours();
+        const m = date.getMinutes();
+        const total = `${Y}/${M}/${D} ${h}:${m}`;
+        setTodoList(
+            todoList.map((todo, index) => (todo.id === id ? { ...todo, content : e.target.value, updatedAt: total} : todo ))
+        );
+    };
     return (
         <>
             <div className="selectFilter">
@@ -88,7 +102,7 @@ const Todo = () => {
                             return (
                                 <li key={item.id}>
                                     <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
-                                    <input type="text" value={item.content} />
+                                    <input type="text" value={item.content} onChange={(e) => updateTodo(e,item.id)}/>
                                     <span>{item.createdAt}</span>
                                     <span>{item.updatedAt}</span>
                                     <button onClick={() => deleteTodo(item.id)}>削除</button>
