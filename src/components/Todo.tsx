@@ -15,14 +15,14 @@ const Todo = () => {
             id: 1,
             content: "test2",
             updatedAt: "2022/11/21",
-            createdAt: "",
+            createdAt: "2022/11/21",
             isFinished: false,
             isDeleted: false,
         },
         {
             id: 2,
             content: "test3",
-            createdAt: "",
+            createdAt: "2022/11/21",
             updatedAt: "2022/11/21",
             isFinished: true,
             isDeleted: false,
@@ -63,14 +63,18 @@ const Todo = () => {
             todoList.map((todo, index) => (todo.id === id ? { ...todo, isDeleted: !todo.isDeleted } : todo))
         );
     }
+    const [filter, setFilter] = useState("all");
+    const changeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilter(e.target.value);
+    };
     return (
         <>
             <div className="selectFilter">
-                <select>
-                    <option value="0">全てのタスク</option>
-                    <option value="0">完了したタスク</option>
-                    <option value="0">現在のタスク</option>
-                    <option value="0">ゴミ箱</option>
+                <select onChange={(e) => changeFilter(e)}>
+                    <option value="all">全てのタスク</option>
+                    <option value="finish">完了したタスク</option>
+                    <option value="now">現在のタスク</option>
+                    <option value="trash">ゴミ箱</option>
                 </select>
             </div>
             <div className="createTodoList">
@@ -78,17 +82,62 @@ const Todo = () => {
                 <button onClick={() => createTodoList()}>追加</button>
             </div>
             <ul className="showTodoList">
-            {todoList.map((item) => {
-                return (
-                    <li key={item.id}>
-                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished}/>
-                        <input type="text" value={item.content} />
-                        <span>{item.createdAt}</span>
-                        <span>{item.updatedAt}</span>
-                        <button onClick={() => deleteTodo(item.id)}>削除</button>
-                    </li>
-                );
-            })}
+                {todoList.flatMap((item) => {
+                    switch (filter) {
+                        case "all":
+                            return (
+                                <li key={item.id}>
+                                    <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
+                                    <input type="text" value={item.content} />
+                                    <span>{item.createdAt}</span>
+                                    <span>{item.updatedAt}</span>
+                                    <button onClick={() => deleteTodo(item.id)}>削除</button>
+                                </li>
+                            );
+                        case "finish":
+                            if (item.isFinished) {
+                                return (
+                                    <li key={item.id}>
+                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
+                                        <input type="text" value={item.content} />
+                                        <span>{item.createdAt}</span>
+                                        <span>{item.updatedAt}</span>
+                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
+                                    </li>
+                                )
+                            } else {
+                                return;
+                            }
+                        case "now":
+                            if (!item.isFinished) {
+                                return (
+                                    <li key={item.id}>
+                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
+                                        <input type="text" value={item.content} />
+                                        <span>{item.createdAt}</span>
+                                        <span>{item.updatedAt}</span>
+                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
+                                    </li>
+                                )
+                            } else {
+                                return;
+                            }
+                        case "trash":
+                            if (item.isDeleted) {
+                                return (
+                                    <li key={item.id}>
+                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
+                                        <input type="text" value={item.content} />
+                                        <span>{item.createdAt}</span>
+                                        <span>{item.updatedAt}</span>
+                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
+                                    </li>
+                                )
+                            } else {
+                                return;
+                            }
+                    }
+                })}
             </ul>
         </>
     );
