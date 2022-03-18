@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Todo = () => {
+    const [todoContent, setTodoContent] = useState("");
     const [todoList, setTodoList] = useState([
         {
             id: 0,
@@ -27,6 +28,30 @@ const Todo = () => {
             isDeleted: false,
         },
     ]);
+    const createTodoContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTodoContent(e.target.value);
+    }
+
+    const createTodoList = () => {
+        const date = new Date();
+        const Y = date.getFullYear();
+        const M = date.getMonth() + 1;;
+        const D = date.getDate();
+        const h = date.getHours();
+        const m = date.getMinutes();
+        const total = `${Y}/${M}/${D} ${h}:${m}`
+        if (todoContent) {
+            const todoDict = {
+                id: todoList.length,
+                content: todoContent,
+                createdAt: total,
+                updatedAt: total,
+                isFinished: false,
+                isDeleted: false,
+            };
+            setTodoList([...todoList, todoDict]);
+        }
+    }
     return (
         <>
             <div className="selectFilter">
@@ -38,8 +63,8 @@ const Todo = () => {
                 </select>
             </div>
             <div className="createTodoList">
-                <input type="text" />
-                <button>追加</button>
+                <input type="text" value={ todoContent } onChange={(e) => createTodoContent(e)}/>
+                <button onClick={() => createTodoList()}>追加</button>
             </div>
             <ul className="showTodoList">
             {todoList.map((item) => {
