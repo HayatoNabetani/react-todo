@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import CreateTodo from "./CreateTodo";
+import Filter from "./Filter";
+import ShowTodoList from "./ShowTodoList";
 
 const Todo = () => {
     const [todoContent, setTodoContent] = useState("");
@@ -84,74 +87,23 @@ const Todo = () => {
     return (
         <>
             <div className="selectFilter">
-                <select onChange={(e) => changeFilter(e)}>
-                    <option value="all">全てのタスク</option>
-                    <option value="finish">完了したタスク</option>
-                    <option value="now">現在のタスク</option>
-                    <option value="trash">ゴミ箱</option>
-                </select>
+            <Filter changeFilter={changeFilter} />
             </div>
             <div className="createTodoList">
-                <input type="text" value={ todoContent } onChange={(e) => createTodoContent(e)}/>
-                <button onClick={() => createTodoList()}>追加</button>
+            <CreateTodo
+                todoList={todoList}
+                createTodoList={createTodoList}
+                createTodoContent={createTodoContent}
+            />
             </div>
             <ul className="showTodoList">
-                {todoList.flatMap((item) => {
-                    switch (filter) {
-                        case "all":
-                            return (
-                                <li key={item.id}>
-                                    <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
-                                    <input type="text" value={item.content} onChange={(e) => updateTodo(e,item.id)}/>
-                                    <span>{item.createdAt}</span>
-                                    <span>{item.updatedAt}</span>
-                                    <button onClick={() => deleteTodo(item.id)}>削除</button>
-                                </li>
-                            );
-                        case "finish":
-                            if (item.isFinished) {
-                                return (
-                                    <li key={item.id}>
-                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
-                                        <input type="text" value={item.content} />
-                                        <span>{item.createdAt}</span>
-                                        <span>{item.updatedAt}</span>
-                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
-                                    </li>
-                                )
-                            } else {
-                                return;
-                            }
-                        case "now":
-                            if (!item.isFinished) {
-                                return (
-                                    <li key={item.id}>
-                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
-                                        <input type="text" value={item.content} />
-                                        <span>{item.createdAt}</span>
-                                        <span>{item.updatedAt}</span>
-                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
-                                    </li>
-                                )
-                            } else {
-                                return;
-                            }
-                        case "trash":
-                            if (item.isDeleted) {
-                                return (
-                                    <li key={item.id}>
-                                        <input type="checkbox" onChange={(e) => finishTodo(e, item.id)} checked={item.isFinished} />
-                                        <input type="text" value={item.content} />
-                                        <span>{item.createdAt}</span>
-                                        <span>{item.updatedAt}</span>
-                                        <button onClick={() => deleteTodo(item.id)}>削除</button>
-                                    </li>
-                                )
-                            } else {
-                                return;
-                            }
-                    }
-                })}
+            <ShowTodoList
+                todoList={todoList}
+                finishTodo={finishTodo}
+                deleteTodo={deleteTodo}
+                updateTodo={updateTodo}
+                filter = {filter}
+            />
             </ul>
         </>
     );
